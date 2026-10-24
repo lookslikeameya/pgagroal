@@ -1894,6 +1894,12 @@ ev_kqueue_io_handler(struct kevent* kev)
                }
                break;
             }
+            /* macOS and the BSDs copy O_NONBLOCK from the listener to the
+             * accepted socket, Linux does not. The readers of these sockets
+             * expect a blocking socket, e.g. recvmsg() in
+             * pgagroal_connection_transfer_read() fails with EAGAIN when the
+             * descriptor has not been sent yet */
+            pgagroal_socket_blocking(watcher->fds.main.client_fd);
             watcher->cb(watcher);
          }
          break;

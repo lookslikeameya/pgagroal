@@ -544,6 +544,31 @@ pgagroal_socket_nonblocking(int fd)
 }
 
 int
+pgagroal_socket_blocking(int fd)
+{
+   int flags;
+
+   flags = fcntl(fd, F_GETFL);
+   if (flags == -1)
+   {
+      pgagroal_log_warn("socket_blocking: F_GETFL %d %s", fd, strerror(errno));
+      errno = 0;
+      return 1;
+   }
+
+   flags &= ~O_NONBLOCK;
+
+   if (fcntl(fd, F_SETFL, flags) == -1)
+   {
+      pgagroal_log_warn("socket_blocking: F_SETFL %d %s", fd, strerror(errno));
+      errno = 0;
+      return 1;
+   }
+
+   return 0;
+}
+
+int
 pgagroal_read_socket(SSL* ssl, int fd, char* buffer, size_t buffer_size)
 {
    int byte_read;

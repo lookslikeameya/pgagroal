@@ -149,6 +149,14 @@ int
 pgagroal_socket_nonblocking(int fd);
 
 /**
+ * Set a socket to blocking
+ * @param fd The descriptor
+ * @return 0 upon success, otherwise 1
+ */
+int
+pgagroal_socket_blocking(int fd);
+
+/**
  * Read bytes from a socket to buffer
  * @param ssl The ssl
  * @param fd The descriptor
